@@ -1,17 +1,43 @@
 # ESP32-S3-Touch-LCD-7
 substitutions:
-  name: "your-device-name"
-  friendly_name: "Your Room Sensor"
-  room: "Your Room"
-
-# Wifi Setup
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+  name: 'esp-main-display'
+  friendly_name: 'ESP Main Display'
+  room: 'Main'
 
 # Packages
 packages:
-  setup:
-    url: https://github.com/jtenniswood/esphome-lvgl/
-    file: waveshare-esp32-s3-touch-lcd-7/package.yaml
-    refresh: 1sec
+  device: !include device/device.yaml
+  sensors: !include device/sensors.yaml
+  lvgl: !include device/lvgl.yaml
+  time: !include addon/time.yaml
+  backlight: !include addon/backlight.yaml
+  network: !include addon/network.yaml
+  fonts: !include assets/fonts.yaml
+  icons: !include assets/icons.yaml
+  button: !include theme/button.yaml
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  networks:
+    - ssid: !secret wifi_ssid
+      password: !secret wifi_password
+    - ssid: !secret wifi_ssid_home
+      password: !secret wifi_password_home
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: 'Esp-Main-Display'
+    password: !secret ap_password
+
+captive_portal:
